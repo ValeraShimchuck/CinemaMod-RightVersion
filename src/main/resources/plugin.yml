@@ -22,3 +22,5 @@ commands:
     description: Show information about what's playing
   history:
     description: Show your previously requested videos
+  forcestart:
+    description: Force start a video

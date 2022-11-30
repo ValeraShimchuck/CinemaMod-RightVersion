@@ -111,6 +111,7 @@ public class CinemaModPlugin extends JavaPlugin {
         getCommand("protect").setExecutor(new ProtectCommand(this));
         getCommand("playing").setExecutor(new PlayingCommand(this));
         getCommand("history").setExecutor(new HistoryCommand(this));
+        getCommand("forcestart").setExecutor(new ForceStartCommand(this));
 
         NetworkUtil.registerChannels(this);
         ProtocolLibUtil.registerSoundPacketListener(this);

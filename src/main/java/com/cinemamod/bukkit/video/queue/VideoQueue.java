@@ -81,6 +81,11 @@ public class VideoQueue {
         });
     }
 
+    public void addForce(Video video) {
+        video.setForce(true);
+        priorityQueue.add(video);
+    }
+
     public VideoQueueResult queueVideo(Video video) {
         if (locked) {
             boolean hasPermission = false;
@@ -90,8 +95,8 @@ public class VideoQueue {
                     hasPermission = true;
                 }
             }
-
-            if (!hasPermission && video.getRequester().hasPermission("cinemamod.admin")) {
+            Player requester = video.getRequester();
+            if (!hasPermission && (requester == null || video.getRequester().hasPermission("cinemamod.admin"))) {
                 hasPermission = true;
             }
 
@@ -109,11 +114,8 @@ public class VideoQueue {
         if (priorityQueue.size() >= MAX_QUEUE_SIZE) {
             return VideoQueueResult.QUEUE_FULL;
         }
-
         priorityQueue.add(video);
-
         callQueueChangeEvent(new TheaterQueueVideoAddEvent(theater, video));
-
         return VideoQueueResult.SUCCESSFUL;
     }
 
@@ -178,7 +180,8 @@ public class VideoQueue {
                 clientState = 0;
             }
             buf.writeInt(clientState);
-            buf.writeBoolean(origin.getUniqueId().equals(video.getRequester().getUniqueId())); // is owner flag
+            Player requester = video.getRequester();
+            buf.writeBoolean(requester != null && origin.getUniqueId().equals(requester.getUniqueId())); // is owner flag
         }
     }
 

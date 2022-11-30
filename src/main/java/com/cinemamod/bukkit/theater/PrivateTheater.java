@@ -68,8 +68,7 @@ public class PrivateTheater extends Theater {
                 getVideoQueue().setLocked(false);
             }
         }
-
-        if (owner == null && isPlaying() && isViewer(getPlaying().getRequester())) {
+        if (owner == null && isPlaying() && getPlaying().getRequester() != null && isViewer(getPlaying().getRequester())) {
             owner = getPlaying().getRequester();
             TheaterSetOwnerEvent event = new TheaterSetOwnerEvent(owner, this);
             cinemaModPlugin.getServer().getPluginManager().callEvent(event);

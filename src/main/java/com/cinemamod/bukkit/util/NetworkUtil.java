@@ -122,7 +122,7 @@ public final class NetworkUtil {
             Theater theater = cinemaModPlugin.getTheaterManager().getCurrentTheater(player);
             if (theater == null || theater instanceof StaticTheater) return;
             Video queuedVideo = theater.getVideoQueue().getVideo(videoInfo);
-            if (queuedVideo == null || !queuedVideo.getRequester().equals(player) || !player.hasPermission("cinemamod.admin"))
+            if (queuedVideo == null || queuedVideo.getRequester() == null || !queuedVideo.getRequester().equals(player) || !player.hasPermission("cinemamod.admin"))
                 return;
             theater.getVideoQueue().unqueueVideo(queuedVideo);
         });

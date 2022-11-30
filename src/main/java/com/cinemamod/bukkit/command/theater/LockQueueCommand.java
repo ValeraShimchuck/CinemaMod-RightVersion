@@ -4,6 +4,7 @@ import com.cinemamod.bukkit.CinemaModPlugin;
 import com.cinemamod.bukkit.theater.Theater;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 public class LockQueueCommand extends TheaterOwnerCommandExecutor {
@@ -26,4 +27,17 @@ public class LockQueueCommand extends TheaterOwnerCommandExecutor {
         return true;
     }
 
+    @Override
+    protected boolean onConsoleTheaterCommand(CommandSender sender, Command command, String label, String[] args, Theater theater) {
+        boolean wasLocked = theater.getVideoQueue().isLocked();
+        theater.getVideoQueue().setLocked(!wasLocked);
+
+        if (wasLocked) {
+            sender.sendMessage(ChatColor.GOLD + "The video queue is now unlocked.");
+        } else {
+            sender.sendMessage(ChatColor.GOLD + "The video queue is now locked.");
+        }
+
+        return true;
+    }
 }

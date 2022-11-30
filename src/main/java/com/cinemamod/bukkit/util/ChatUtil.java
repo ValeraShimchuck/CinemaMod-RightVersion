@@ -44,10 +44,11 @@ public final class ChatUtil {
                     ChatColor.BOLD + "NOTHING PLAYING" + playingAt,
                     SECONDARY_COLOR + "Request a video with /request");
         } else {
+            Player requester = theater.getPlaying().getRequester();
             sendPaddedMessage(player,
                     ChatColor.BOLD + "NOW PLAYING" + playingAt,
                     SECONDARY_COLOR + theater.getPlaying().getVideoInfo().getTitle(),
-                    SECONDARY_COLOR + "Requested by: " + theater.getPlaying().getRequester().getName(),
+                    SECONDARY_COLOR + "Requested by: " + (requester == null? "server" : requester.getName()),
                     showOriginUrl ? SECONDARY_COLOR + theater.getPlaying().getVideoInfo().getServiceType().getOriginUrl(theater.getPlaying().getVideoInfo().getId()) : null);
 
             if (theater.getPlaying().getVideoInfo().getServiceType() == VideoServiceType.TWITCH) {

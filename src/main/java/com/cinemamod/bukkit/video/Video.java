@@ -17,6 +17,7 @@ public class Video implements Comparable<Video>, PacketByteBufSerializable<Video
     private long startedAt;
     private transient Player requester;
     private transient Map<Player, QueueVoteType> votes;
+    private transient boolean force = false;
 
     public Video(VideoInfo videoInfo, Player requester) {
         this.videoInfo = videoInfo;
@@ -27,6 +28,10 @@ public class Video implements Comparable<Video>, PacketByteBufSerializable<Video
 
     public VideoInfo getVideoInfo() {
         return videoInfo;
+    }
+
+    public void setForce(boolean bool) {
+        force = bool;
     }
 
     public Player getRequester() {
@@ -118,17 +123,13 @@ public class Video implements Comparable<Video>, PacketByteBufSerializable<Video
     // Used for PriorityQueue sorting
     @Override
     public int compareTo(Video other) {
+        if (other.force && !force) return -1;
+        if (other.force) return 0;
+        if (force) return 1;
         int thisScore = getVoteScore();
         int otherScore = other.getVoteScore();
-
-        if (thisScore < otherScore) {
-            return 1;
-        } else if (thisScore > otherScore) {
-            return -1;
-        } else {
-            // TODO: check request time
-            return 0;
-        }
+        // TODO: check request time
+        return Integer.compare(otherScore, thisScore);
     }
 
     @Override

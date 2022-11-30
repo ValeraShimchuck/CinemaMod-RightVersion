@@ -264,18 +264,7 @@ public abstract class Theater {
         if (!isPlaying()) {
             if (videoQueue.hasNext()) {
                 // Set next video
-                playing = videoQueue.poll();
-                playing.start();
-
-                callStartVideoEvent = true;
-
-                for (Player viewer : viewers) {
-                    NetworkUtil.sendLoadScreenPacket(cinemaModPlugin, viewer, screen, playing);
-                }
-
-                for (Player player : cinemaModPlugin.getServer().getOnlinePlayers()) {
-                    sendUpdatePreviewScreensPacket(player);
-                }
+                startVideo(videoQueue.poll());
             } else {
                 for (Player viewer : viewers) {
                     NetworkUtil.sendUnloadScreenPacket(cinemaModPlugin, viewer, screen);
@@ -319,6 +308,23 @@ public abstract class Theater {
         if (callStartVideoEvent) {
             TheaterStartVideoEvent event = new TheaterStartVideoEvent(this);
             cinemaModPlugin.getServer().getPluginManager().callEvent(event);
+        }
+    }
+
+    public void startVideo(Video video) {
+        if (isPlaying()) {
+            if (playing.hasEnded()) {
+                forceSkip();
+            }
+        }
+        playing = video;
+        playing.start();
+        for (Player viewer : viewers) {
+            NetworkUtil.sendLoadScreenPacket(cinemaModPlugin, viewer, screen, playing);
+        }
+
+        for (Player player : cinemaModPlugin.getServer().getOnlinePlayers()) {
+            sendUpdatePreviewScreensPacket(player);
         }
     }
 
